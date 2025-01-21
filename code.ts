@@ -21,7 +21,7 @@ figma.ui.onmessage = (msg: {
   console.log('here')
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
-  if (msg.type === 'convert') {
+  if (msg.type === 'saveVaraibles') {
     // This plugin creates rectangles on the screen.
     const { collectionName, variables } = msg;
 
@@ -38,8 +38,4 @@ figma.ui.onmessage = (msg: {
 
     figma.ui.postMessage('done');
   }
-
-  // Make sure to close the plugin when you're done. Otherwise the plugin will
-  // keep running, which shows the cancel button at the bottom of the screen.
-  figma.closePlugin();
 };

@@ -1,40 +1,29 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Tailwind CSS v4 variables to Figma
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+A Figma plugin that allows to input CSS variables in Tailwind v4 format and introduces the feature to import them in Figma as **Local Variables** or **Local Styles**.
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+## Current Stage
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+This plugin supports formats:
 
-  https://nodejs.org/en/download/
+* **HEX**
+* **RGBA**
+* **RGB**
 
-Next, install TypeScript using the command:
+## Usage
 
-  npm install -g typescript
+### Local Variables
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+If you choose to import the CSS variables as **Local Variables** you should fill the "Collection Name" input field in order to give a name of the collection where the variables will be stored.
 
-  npm install --save-dev @figma/plugin-typings
+If a collection with this name exists it will append or override the inported variables to the collection.
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+The CSS variables are entered in the big textbox "CSS Variables"
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+### Local Styles
 
-For more information, visit https://www.typescriptlang.org/
+If you choose to import the CSS variables as **Local Styles** it is only required to fill the "CSS Variables" textbox
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+If there are styles that already exist they will be overriden.
 
-We recommend writing TypeScript code using Visual Studio code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## Screenshot

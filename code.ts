@@ -7,28 +7,36 @@
 // full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
 
 // This shows the HTML page in "ui.html".
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 450, height: 500 });
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage =  (msg: {type: string, count: number}) => {
+
+figma.ui.onmessage = (msg: {
+  type: string
+  collectionName: string,
+  variables: { name: string, value: RGBA }[]
+}) => {
+  console.log('here')
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
-  if (msg.type === 'create-shapes') {
+  if (msg.type === 'convert') {
     // This plugin creates rectangles on the screen.
-    const numberOfRectangles = msg.count;
+    const { collectionName, variables } = msg;
 
-    const nodes: SceneNode[] = [];
-    for (let i = 0; i < numberOfRectangles; i++) {
-      const rect = figma.createRectangle();
-      rect.x = i * 150;
-      rect.fills = [{ type: 'SOLID', color: { r: 1, g: 0.5, b: 0 } }];
-      figma.currentPage.appendChild(rect);
-      nodes.push(rect);
-    }
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
+    const figmaCollection = figma.variables.createVariableCollection(collectionName);
+
+    console.log(figmaCollection);
+
+    variables.forEach(variable => {
+      console.log(variable);
+      const { name, value } = variable;
+      const figmaVariable = figma.variables.createVariable(name, figmaCollection, "COLOR");
+      figmaVariable.setValueForMode(figmaCollection.defaultModeId, value);
+    });
+
+    figma.ui.postMessage('done');
   }
 
   // Make sure to close the plugin when you're done. Otherwise the plugin will

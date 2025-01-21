@@ -9,7 +9,7 @@
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, {
   width: 450,
-  height: 500,
+  height: 520,
   themeColors: true,
 });
 
@@ -49,6 +49,25 @@ figma.ui.onmessage = async (msg: {
       const figmaVariable = figma.variables.createVariable(name, figmaCollection, "COLOR");
       figmaVariable.setValueForMode(figmaCollection.defaultModeId, value);
     });
+
+    figma.ui.postMessage('done');
+  }
+
+  if (msg.type === 'saveStyle') {
+    const { variables } = msg;
+    variables.forEach(variable => {
+      const painStyle = figma.createPaintStyle();
+      painStyle.name = variable.name;
+      painStyle.paints = [{
+        type: 'SOLID',
+        color: {
+          r: variable.value.r,
+          g: variable.value.g,
+          b: variable.value.b,
+        },
+        opacity: variable.value.a
+      }]
+    })
 
     figma.ui.postMessage('done');
   }

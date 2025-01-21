@@ -53,7 +53,7 @@
       align-self: flex-start;
       background-color: var(--figma-color-bg-brand);
       color: var(--figma-color-text-onbrand);
-      border-radius: inherit;
+      border-radius: 6px;
       border-color: var(--figma-color-bg-brand);
       border-style: solid;
       padding: 6px 12px;
@@ -70,7 +70,8 @@
       color: red;
     }
 
-    label {
+    label,
+    span {
       font-size: 14px;
       font-weight: bold;
     }
@@ -78,6 +79,16 @@
     #successMessage {
       color: green;
       display: none;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    #saveLocalStyle {
+      background-color: var(--figma-color-bg-component);
+      border-color: var(--figma-color-bg-component);
     }
   </style>
 </head>
@@ -94,10 +105,18 @@
     <textarea id="cssInput" placeholder="Paste your CSS variables here..."></textarea>
     <small id="cssInputError" class="errorMessage"></small>
   </div>
-  <button id="convertButton">Convert</button>
+  <div class="input-group">
+    <span>Save as:</span>
+    <div class="buttons">
+      <button id="saveLocalVariable">Local Variable</button>
+      <button id="saveLocalStyle">Local Style</button>
+    </div>
+  </div>
   <small id="successMessage">Success!</small>
 
   <script type="module">
+    let checkForCollectionName = true;
+
     function clearErrorMessages() {
       document.getElementById('successMessage').style.display = 'none';
       document.getElementById('collectionNameError').textContent = '';
@@ -114,7 +133,7 @@
 
       let hasError = false;
 
-      if (!collectionName) {
+      if (!collectionName && checkForCollectionName) {
         document.getElementById('collectionNameError').textContent = 'Enter a collection name';
         hasError = true;
       }
@@ -160,6 +179,13 @@
 
       console.log(variables);
       // Send the variables to the main thread
+      return { collectionName, variables };
+    }
+
+    // Event listener for the convert button
+    document.getElementById('saveLocalVariable').addEventListener('click', async () => {
+      const { collectionName, variables } = await convertCSSVariables();
+
       parent.postMessage({
         pluginMessage: {
           type: 'saveVaraibles',
@@ -168,10 +194,23 @@
         }
       },
         '*');
-    }
+    });
 
-    // Event listener for the convert button
-    document.getElementById('convertButton').addEventListener('click', convertCSSVariables);
+    document.getElementById('saveLocalStyle').addEventListener('click', async () => {
+      checkForCollectionName = false;
+
+      const { collectionName, variables } = await convertCSSVariables();
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'saveStyle',
+          variables
+        }
+      },
+        '*');
+
+      checkForCollectionName = true;
+    });
 
     onmessage = (event) => {
       if (event.data.pluginMessage === 'done') {

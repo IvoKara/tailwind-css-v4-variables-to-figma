@@ -9,7 +9,7 @@
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, {
   width: 450,
-  height: 470,
+  height: 500,
   themeColors: true,
 });
 
@@ -17,7 +17,7 @@ figma.showUI(__html__, {
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 
-figma.ui.onmessage = (msg: {
+figma.ui.onmessage = async (msg: {
   type: string
   collectionName: string,
   variables: { name: string, value: RGBA }[]
@@ -29,7 +29,17 @@ figma.ui.onmessage = (msg: {
     // This plugin creates rectangles on the screen.
     const { collectionName, variables } = msg;
 
-    const figmaCollection = figma.variables.createVariableCollection(collectionName);
+    const localFigmaCollections = await figma.variables.getLocalVariableCollectionsAsync();
+
+    let figmaCollection: VariableCollection;
+
+    const foundCollection = localFigmaCollections.find(collection => collection.name === collectionName);
+    if (foundCollection) {
+      figmaCollection = foundCollection;
+    } else {
+      figmaCollection = figma.variables.createVariableCollection(collectionName);
+    }
+
 
     console.log(figmaCollection);
 

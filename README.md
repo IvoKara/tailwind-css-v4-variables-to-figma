@@ -26,4 +26,7 @@ If you choose to import the CSS variables as **Local Styles** it is only require
 
 If there are styles that already exist they will be overriden.
 
-## Screenshot
+## Screenshots
+
+![Screenshot 1](./img/screenshot1.png)
+![Screenshot 2](./img/screenshot2.png)

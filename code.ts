@@ -55,9 +55,19 @@ figma.ui.onmessage = async (msg: {
 
   if (msg.type === 'saveStyle') {
     const { variables } = msg;
+
+    const localStyles = await figma.getLocalPaintStylesAsync();
+
     variables.forEach(variable => {
-      const painStyle = figma.createPaintStyle();
-      painStyle.name = variable.name;
+      let painStyle: PaintStyle;
+      const foundStyle = localStyles.find(style => style.name === variable.name);
+      if (foundStyle) {
+        painStyle = foundStyle;
+      } else {
+        painStyle = figma.createPaintStyle();
+        painStyle.name = variable.name;
+      }
+
       painStyle.paints = [{
         type: 'SOLID',
         color: {

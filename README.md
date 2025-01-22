@@ -2,6 +2,8 @@
 
 A Figma plugin that allows to input CSS variables in Tailwind v4 format and introduces the feature to import them in Figma as **Local Variables** or **Local Styles**.
 
+[Preview the plugin.](https://www.figma.com/community/plugin/1463378448591477945/tailwind-css-v4-variables-to-figma)
+
 ## Current Stage
 
 This plugin supports formats:
